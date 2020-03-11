@@ -1,0 +1,63 @@
+<html lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="pt.css" />
+    <title>剪貼簿</title>
+</head>
+
+<body>
+    <div v-cloak class="container" id="app">
+        <div class="row">
+            <div class="col">
+                <div class="row" v-for="(item,index) in li">
+                    <div class="input-group-prepend" style="width: 100%;">
+                        <button class="btn btn-secondary" type="button" v-on:click="Copy(index)">Copy</button>
+                        <input v-bind:id="'txt'+index" type="text" class="form-control" v-model="item.Content">
+                    </div>
+                </div>
+                <div class="row">
+                    <button class="btn btn-outline-secondary" type="button" v-on:click="addItem"
+                        style="width: 100%;">+</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="jquery-3.3.1.min.js"></script>
+    <script src="vue.js"></script>
+    <script src="popper.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                li: [
+                ]
+            },
+            methods: {
+                Copy: function (s) {
+                    copyDisabledTextToClipboard("#txt" + s)
+                },
+                addItem: function () {
+                    this.li.push({ Content: "" })
+                }
+            },
+            mounted: function () {
+                var storageLi = localStorage.getItem("pasteToolLi");
+                if (storageLi == null || storageLi == undefined) { return; }
+                this.li = JSON.parse(storageLi);
+            },
+            updated: function () {
+                var str = JSON.stringify(this.li);
+                localStorage.setItem("pasteToolLi", str);
+            }
+        });
+        function copyDisabledTextToClipboard(element) {
+            $(element).select();
+            document.execCommand("copy");
+            //$temp.remove();
+        }
+    </script>
+</body>
