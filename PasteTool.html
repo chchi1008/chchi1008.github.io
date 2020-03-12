@@ -11,16 +11,17 @@
 <body>
     <div v-cloak class="container" id="app">
         <div class="row">
+            <button class="btn btn-outline-secondary" type="button" v-on:click="addItem"
+                style="width: 100%;">+</button>
+        </div>
+        <div class="row">
             <div class="col">
                 <div class="row" v-for="(item,index) in li">
                     <div class="input-group-prepend" style="width: 100%;">
                         <button class="btn btn-secondary" type="button" v-on:click="Copy(index)">Copy</button>
                         <input v-bind:id="'txt'+index" type="text" class="form-control" v-model="item.Content">
+                        <button class="btn btn-danger" type="button" v-on:click="removeItem(index)">Del</button>
                     </div>
-                </div>
-                <div class="row">
-                    <button class="btn btn-outline-secondary" type="button" v-on:click="addItem"
-                        style="width: 100%;">+</button>
                 </div>
             </div>
         </div>
@@ -41,7 +42,10 @@
                     copyDisabledTextToClipboard("#txt" + s)
                 },
                 addItem: function () {
-                    this.li.push({ Content: "" })
+                    this.li.unshift({ Content: "" })
+                },
+                removeItem: function (idx) {
+                    this.li.splice(idx, 1);
                 }
             },
             mounted: function () {
